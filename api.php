@@ -13,10 +13,12 @@ $request= $_SERVER['REQUEST_METHOD'];
 			postData($data);
 			break;
 		case 'PUT':
-			echo '{"name":"PUT.....Rabid"}';
+			$data= json_decode(file_get_contents('php://input'),true);
+			putData($data);
 			break;
 		case 'DELETE':
-			echo '{"name":"DELETE.....Rabid"}';
+			$data= json_decode(file_get_contents('php://input'),true);
+			deleteData($data);
 			break;
 		
 		default:
@@ -50,12 +52,40 @@ function postData($data) {
 	$sql= "INSERT INTO `user`(`id`, `name`, `email`, `created_at`) VALUES (NULL,'$name','$email',NOW())";
 
 	if (mysqli_query($conn,$sql)) {
-		echo '{"Result":"Data inserted Successfully!"}';
+		echo '{"Result":"Data Inserted Successfully!"}';
 	}
 	else {
-		echo '{"Result":"Data insertion Failled!"}';
+		echo '{"Result":"Data Insertion Failled!"}';
 	}
 
+}
+
+function putData($data) {
+	include 'db.php';
+	$id= $data['id'];
+	$name= $data['name'];
+	$email= $data['email'];
+	$sql= "UPDATE `user` SET `name`='$name',`email`='email',`created_at`=NOW() WHERE `id`= $id";
+
+	if (mysqli_query($conn,$sql)) {
+		echo '{"Result":"Data Updated Successfully!"}';
+	}
+	else {
+		echo '{"Result":"Data Update Failed!"}';
+	}
+}
+
+function deleteData($data) {
+	include 'db.php';
+	$id= $data['id'];
+	$sql= "DELETE FROM `user` WHERE `id`= $id";
+
+	if (mysqli_query($conn,$sql)) {
+		echo '{"Result":"Data Deleted Successfully!"}';
+	}
+	else {
+		echo '{"Result":"Data Detele Failed!"}';
+	}
 }
 
 
