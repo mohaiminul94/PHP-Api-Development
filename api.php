@@ -9,7 +9,8 @@ $request= $_SERVER['REQUEST_METHOD'];
 				getData();
 			break;
 		case 'POST':
-			echo '{"name":"POST.....Rabid"}';
+			$data= json_decode(file_get_contents('php://input'),true);
+			postData($data);
 			break;
 		case 'PUT':
 			echo '{"name":"PUT.....Rabid"}';
@@ -38,6 +39,21 @@ function getData() {
 
 	else {
 		echo '{"Result":"No Data Found!"}';
+	}
+
+}
+
+function postData($data) {
+	include 'db.php';
+	$name= $data['name'];
+	$email= $data['email'];
+	$sql= "INSERT INTO `user`(`id`, `name`, `email`, `created_at`) VALUES (NULL,'$name','$email',NOW())";
+
+	if (mysqli_query($conn,$sql)) {
+		echo '{"Result":"Data inserted Successfully!"}';
+	}
+	else {
+		echo '{"Result":"Data insertion Failled!"}';
 	}
 
 }
